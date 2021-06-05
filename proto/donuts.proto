@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/s1ntaxe770r/donut-rpc";
+
+service DonutShop {
+    rpc GetDonut(DonutRequest) returns (Donut){}
+    rpc MakeDonut(Donut) returns (DonutRequest){}
+}
+
+message Donut {
+    string name=1;
+    int32 price=2;
+    string image=3;    
+    string id=4;
+}
+
+message  DonutRequest {
+    string name=1;
+}
+
+
