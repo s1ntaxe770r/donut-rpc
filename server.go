@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/s1ntaxe770r/donut-rpc/db"
 	pb "github.com/s1ntaxe770r/donut-rpc/proto"
 	"github.com/s1ntaxe770r/donut-rpc/utils"
 	"google.golang.org/grpc"
@@ -23,13 +24,21 @@ type DonutServer struct {
 }
 
 func (ds *DonutServer) GetDonut(ctx context.Context, in *pb.DonutRequest) (*pb.Donut, error) {
-	lg.Println(in.GetName())
-	return &pb.Donut{Name: "hey"}, nil
+	conn := db.Connect()
+	donut, err := db.GetDonut(conn, in)
+	if err != nil {
+		return nil, err
+	}
+	return donut, nil
 }
 
 func (ds *DonutServer) MakeDonut(ctx context.Context, in *pb.Donut) (*pb.DonutRequest, error) {
-	lg.Println(in.GetName())
-	return &pb.DonutRequest{}, nil
+	conn := db.Connect()
+	_, err := db.MakeDonut(conn, in)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DonutRequest{Name: in.GetName()}, nil
 }
 
 func main() {
@@ -39,7 +48,7 @@ func main() {
 	}
 	server := grpc.NewServer()
 	pb.RegisterDonutShopServer(server, &DonutServer{})
-	lg.Printf("shop opened on %v", lis.Addr())
+	log.Printf("shop opened on %v", lis.Addr())
 
 	err = server.Serve(lis)
 	if err != nil {
