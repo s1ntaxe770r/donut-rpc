@@ -62,9 +62,9 @@ func (ds *DonutServer) GetDonut(ctx context.Context, in *pb.DonutRequest) (*pb.D
 	return donut, nil
 }
 
-func (ds *DonutServer) GetDonuts(ctx context.Context, in *pb.DonutRequest) (*pb.Donuts, error) {
+func (ds *DonutServer) GetDonuts(ctx context.Context, in *emptypb.Empty) (*pb.Donuts, error) {
 	donuts, err := db.GetDonuts(conn)
-	GetDonutsCounter.WithLabelValues(in.Name).Inc()
+	GetDonutsCounter.WithLabelValues("GetDonuts").Inc()
 	if err != nil {
 		return nil, err
 	}
