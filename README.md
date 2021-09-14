@@ -33,7 +33,7 @@ DonutShop.GetVersion
 DonutShop.MakeDonut
 ```
 
-### Method (DonutShop.GetDonut)
+### Method (DonutShop.GetDonuts)
 ```shell
 grpcurl -plaintext localhost:5050 DonutShop/GetDonuts 
 ```
@@ -57,7 +57,7 @@ sample response
   ]
 }
 ```
-### Method (DonutShop.GetDonuts)
+### Method (DonutShop.GetDonut)
 ```shell
 grpcurl -d '{"name":"bagel"}'  -plaintext  localhost:5050 DonutShop/GetDonut
 ```
