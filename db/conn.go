@@ -32,6 +32,15 @@ func MakeDonut(db *gorm.DB, donut *donut_rpc.Donut) (*donut_rpc.Donut, error) {
 	return donut, nil
 }
 
+func GetDonuts(db *gorm.DB) (*donut_rpc.Donuts, error) {
+	var donuts donut_rpc.Donuts
+	err := db.Find(&donuts.Donuts).Error
+	if err != nil {
+		return nil, err
+	}
+	return &donuts, nil
+}
+
 func GetDonut(db *gorm.DB, donut *donut_rpc.DonutRequest) (*donut_rpc.Donut, error) {
 	var res donut_rpc.Donut
 	err := db.First(&res, donut.Name).Error
