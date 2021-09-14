@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DonutShopClient interface {
 	GetDonut(ctx context.Context, in *DonutRequest, opts ...grpc.CallOption) (*Donut, error)
-	GetDonuts(ctx context.Context, in *DonutRequest, opts ...grpc.CallOption) (*Donuts, error)
+	GetDonuts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Donuts, error)
 	MakeDonut(ctx context.Context, in *Donut, opts ...grpc.CallOption) (*DonutRequest, error)
 	GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Version, error)
 }
@@ -42,7 +42,7 @@ func (c *donutShopClient) GetDonut(ctx context.Context, in *DonutRequest, opts .
 	return out, nil
 }
 
-func (c *donutShopClient) GetDonuts(ctx context.Context, in *DonutRequest, opts ...grpc.CallOption) (*Donuts, error) {
+func (c *donutShopClient) GetDonuts(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Donuts, error) {
 	out := new(Donuts)
 	err := c.cc.Invoke(ctx, "/DonutShop/GetDonuts", in, out, opts...)
 	if err != nil {
@@ -74,7 +74,7 @@ func (c *donutShopClient) GetVersion(ctx context.Context, in *emptypb.Empty, opt
 // for forward compatibility
 type DonutShopServer interface {
 	GetDonut(context.Context, *DonutRequest) (*Donut, error)
-	GetDonuts(context.Context, *DonutRequest) (*Donuts, error)
+	GetDonuts(context.Context, *emptypb.Empty) (*Donuts, error)
 	MakeDonut(context.Context, *Donut) (*DonutRequest, error)
 	GetVersion(context.Context, *emptypb.Empty) (*Version, error)
 	mustEmbedUnimplementedDonutShopServer()
@@ -87,7 +87,7 @@ type UnimplementedDonutShopServer struct {
 func (UnimplementedDonutShopServer) GetDonut(context.Context, *DonutRequest) (*Donut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDonut not implemented")
 }
-func (UnimplementedDonutShopServer) GetDonuts(context.Context, *DonutRequest) (*Donuts, error) {
+func (UnimplementedDonutShopServer) GetDonuts(context.Context, *emptypb.Empty) (*Donuts, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDonuts not implemented")
 }
 func (UnimplementedDonutShopServer) MakeDonut(context.Context, *Donut) (*DonutRequest, error) {
@@ -128,7 +128,7 @@ func _DonutShop_GetDonut_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _DonutShop_GetDonuts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DonutRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func _DonutShop_GetDonuts_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/DonutShop/GetDonuts",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DonutShopServer).GetDonuts(ctx, req.(*DonutRequest))
+		return srv.(DonutShopServer).GetDonuts(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

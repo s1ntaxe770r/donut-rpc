@@ -3,7 +3,7 @@ option go_package = "github.com/s1ntaxe770r/donut-rpc";
 import "google/protobuf/empty.proto";
 service DonutShop {
     rpc GetDonut(DonutRequest) returns (Donut){}
-    rpc GetDonuts(DonutRequest) returns (Donuts){}
+    rpc GetDonuts(google.protobuf.Empty) returns (Donuts){}
     rpc MakeDonut(Donut) returns (DonutRequest){}
     rpc GetVersion(google.protobuf.Empty) returns (Version){}
 }
