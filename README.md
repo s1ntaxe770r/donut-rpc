@@ -8,11 +8,11 @@ a fake donut store built using [grpc](https://grpc.io) and sqlite
 ## Setup 
 pull the docker container
 ```shell
-docker pull 
+docker pull ghcr.io/s1ntaxe770r/donut-store:latest
 ```
 start the service 
 ```shell
-docker run -p 5050:5050 -d imagename 
+docker run -p 5050:5050 9052:9052 -d donut-store:latest
 ```
 
 ## Testing 
