@@ -43,7 +43,7 @@ func GetDonuts(db *gorm.DB) (*donut_rpc.Donuts, error) {
 
 func GetDonut(db *gorm.DB, donut *donut_rpc.DonutRequest) (*donut_rpc.Donut, error) {
 	var res donut_rpc.Donut
-	err := db.First(&res, donut.Name).Error
+	err := db.Where("name = ?", donut.Name).First(&res).Error
 	if err != nil {
 		dblg.Fatal(err.Error())
 		return &res, err
