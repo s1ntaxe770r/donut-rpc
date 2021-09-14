@@ -13,5 +13,6 @@ RUN apk add --no-cache ca-certificates
 COPY --from=builder /app/donutservice /donutservice
 
 EXPOSE 5050
+EXPOSE 9092
 
 ENTRYPOINT ["/donutservice"]
