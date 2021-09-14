@@ -15,10 +15,12 @@ import (
 	"github.com/s1ntaxe770r/donut-rpc/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const (
-	port = ":5050"
+	port    = ":5050"
+	version = "v0.1"
 )
 
 var (
@@ -78,6 +80,10 @@ func (ds *DonutServer) MakeDonut(ctx context.Context, in *pb.Donut) (*pb.DonutRe
 	}
 	ds.lg.Println(in)
 	return &pb.DonutRequest{Name: in.GetName()}, nil
+}
+
+func (ds *DonutServer) GetVersion(ctx context.Context, in *emptypb.Empty) (*pb.Version, error) {
+	return &pb.Version{Number: version}, nil
 }
 
 func main() {
