@@ -35,9 +35,18 @@ func (ds *DonutServer) GetDonut(ctx context.Context, in *pb.DonutRequest) (*pb.D
 	return donut, nil
 }
 
+func (ds *DonutServer) GetDonuts(ctx context.Context, in *pb.DonutRequest) (*pb.Donuts, error) {
+	donuts, err := db.GetDonuts(conn)
+	if err != nil {
+		return nil, err
+	}
+	return donuts, nil
+
+}
 func (ds *DonutServer) MakeDonut(ctx context.Context, in *pb.Donut) (*pb.DonutRequest, error) {
 	_, err := db.MakeDonut(conn, in)
 	if err != nil {
+
 		return nil, err
 	}
 	ds.lg.Println(in)
