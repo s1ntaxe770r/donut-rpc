@@ -37,7 +37,7 @@ var (
 		Help: "number of requests served by the make donut method",
 	}, []string{"MakeDonut"})
 	GetDonutsCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "get_donust_request_counter",
+		Name: "get_donuts_request_counter",
 		Help: "number of requests served by the get donuts method",
 	}, []string{"getDonuts"})
 )
@@ -69,7 +69,6 @@ func (ds *DonutServer) GetDonuts(ctx context.Context, in *emptypb.Empty) (*pb.Do
 		return nil, err
 	}
 	return donuts, nil
-
 }
 func (ds *DonutServer) MakeDonut(ctx context.Context, in *pb.Donut) (*pb.DonutRequest, error) {
 	_, err := db.MakeDonut(conn, in)
