@@ -1,21 +1,21 @@
 package utils
 
 import (
-	"bytes"
 	"log"
+	"os"
 
 	"github.com/fatih/color"
 )
 
+// NewDonutLogger returns a new instance of a donut logger
 func NewDonutLogger() *log.Logger {
-	var buf bytes.Buffer
-	LG := log.New(&buf, "[Donut-Server]", log.Lshortfile)
-	return LG
+	prefix := color.YellowString("[Donut-Server]")
+	loggr := log.New(os.Stdout, prefix, log.LstdFlags)
+	return loggr
 }
 
 func NewDBLogger() *log.Logger {
 	prefix := color.YellowString("[DATABASE]")
-	var buf bytes.Buffer
-	LG := log.New(&buf, prefix, log.Lshortfile)
+	LG := log.New(os.Stdout, prefix, log.Lshortfile)
 	return LG
 }
