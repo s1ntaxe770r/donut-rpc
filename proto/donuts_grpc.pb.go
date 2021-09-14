@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,6 +22,7 @@ type DonutShopClient interface {
 	GetDonut(ctx context.Context, in *DonutRequest, opts ...grpc.CallOption) (*Donut, error)
 	GetDonuts(ctx context.Context, in *DonutRequest, opts ...grpc.CallOption) (*Donuts, error)
 	MakeDonut(ctx context.Context, in *Donut, opts ...grpc.CallOption) (*DonutRequest, error)
+	GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Version, error)
 }
 
 type donutShopClient struct {
@@ -58,6 +60,15 @@ func (c *donutShopClient) MakeDonut(ctx context.Context, in *Donut, opts ...grpc
 	return out, nil
 }
 
+func (c *donutShopClient) GetVersion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Version, error) {
+	out := new(Version)
+	err := c.cc.Invoke(ctx, "/DonutShop/GetVersion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DonutShopServer is the server API for DonutShop service.
 // All implementations must embed UnimplementedDonutShopServer
 // for forward compatibility
@@ -65,6 +76,7 @@ type DonutShopServer interface {
 	GetDonut(context.Context, *DonutRequest) (*Donut, error)
 	GetDonuts(context.Context, *DonutRequest) (*Donuts, error)
 	MakeDonut(context.Context, *Donut) (*DonutRequest, error)
+	GetVersion(context.Context, *emptypb.Empty) (*Version, error)
 	mustEmbedUnimplementedDonutShopServer()
 }
 
@@ -80,6 +92,9 @@ func (UnimplementedDonutShopServer) GetDonuts(context.Context, *DonutRequest) (*
 }
 func (UnimplementedDonutShopServer) MakeDonut(context.Context, *Donut) (*DonutRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MakeDonut not implemented")
+}
+func (UnimplementedDonutShopServer) GetVersion(context.Context, *emptypb.Empty) (*Version, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVersion not implemented")
 }
 func (UnimplementedDonutShopServer) mustEmbedUnimplementedDonutShopServer() {}
 
@@ -148,6 +163,24 @@ func _DonutShop_MakeDonut_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DonutShop_GetVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DonutShopServer).GetVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/DonutShop/GetVersion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DonutShopServer).GetVersion(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DonutShop_ServiceDesc is the grpc.ServiceDesc for DonutShop service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +199,10 @@ var DonutShop_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MakeDonut",
 			Handler:    _DonutShop_MakeDonut_Handler,
+		},
+		{
+			MethodName: "GetVersion",
+			Handler:    _DonutShop_GetVersion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

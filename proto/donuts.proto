@@ -1,10 +1,11 @@
 syntax = "proto3";
 option go_package = "github.com/s1ntaxe770r/donut-rpc";
-
+import "google/protobuf/empty.proto";
 service DonutShop {
     rpc GetDonut(DonutRequest) returns (Donut){}
     rpc GetDonuts(DonutRequest) returns (Donuts){}
     rpc MakeDonut(Donut) returns (DonutRequest){}
+    rpc GetVersion(google.protobuf.Empty) returns (Version){}
 }
 
 message Donut {
@@ -17,9 +18,11 @@ message Donut {
 message  DonutRequest {
     string name=1;
 }
-
 message Donuts {
     repeated Donut donuts =1;
 }
 
+message Version {
+    string number =1;
+}
 
