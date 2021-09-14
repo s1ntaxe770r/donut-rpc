@@ -24,10 +24,10 @@ func Connect() *gorm.DB {
 }
 
 func MakeDonut(db *gorm.DB, donut *donut_rpc.Donut) (*donut_rpc.Donut, error) {
-	bakerr := db.Create(donut).Error
-	if bakerr != nil {
-		dblg.Fatal(bakerr.Error())
-		return donut, bakerr
+	err := db.Create(&donut).Error
+	if err != nil {
+		dblg.Println(err.Error())
+		return donut, err
 	}
 	return donut, nil
 }
