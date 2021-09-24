@@ -16,7 +16,7 @@ var (
 func Connect() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open("inventory.db"), &gorm.Config{})
 	if err != nil {
-		dblg.Panicln("UNABLE TO CONNECT TO DATABASE")
+		dblg.Panicln("UNABLE TO CONNECT TO DATABASE", err)
 	}
 	db.AutoMigrate(&donut_rpc.Donut{})
 	dblg.Println(color.GreenString("DB CONNECTION ESTABLISHED"))
@@ -48,5 +48,6 @@ func GetDonut(db *gorm.DB, donut *donut_rpc.DonutRequest) (*donut_rpc.Donut, err
 		dblg.Fatal(err.Error())
 		return &res, err
 	}
+	defer dblg.Printf("handle get donut ")
 	return &res, nil
 }
