@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"time"
 
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/prometheus/client_golang/prometheus"
@@ -16,6 +17,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
 )
 
 const (
@@ -50,34 +52,36 @@ func init() {
 type DonutServer struct {
 	pb.UnimplementedDonutShopServer
 	lg *log.Logger
+	db *gorm.DB
 }
 
 func (ds *DonutServer) GetDonut(ctx context.Context, in *pb.DonutRequest) (*pb.Donut, error) {
-	donut, err := db.GetDonut(conn, in)
+	donut, err := db.GetDonut(ds.db, in)
 	GetDonutCounter.WithLabelValues(in.Name).Inc()
 	ds.lg.Println(in)
 	if err != nil {
 		return nil, err
 	}
+	defer ds.lg.Printf("%s|handle get donut for %v", time.Now().String(), in)
 	return donut, nil
 }
 
 func (ds *DonutServer) GetDonuts(ctx context.Context, in *emptypb.Empty) (*pb.Donuts, error) {
-	donuts, err := db.GetDonuts(conn)
+	donuts, err := db.GetDonuts(ds.db)
 	GetDonutsCounter.WithLabelValues("GetDonuts").Inc()
 	if err != nil {
 		return nil, err
 	}
+	defer ds.lg.Printf("%s|handle get donuts", time.Now().String())
 	return donuts, nil
 }
 func (ds *DonutServer) MakeDonut(ctx context.Context, in *pb.Donut) (*pb.DonutRequest, error) {
-	_, err := db.MakeDonut(conn, in)
+	_, err := db.MakeDonut(ds.db, in)
 	MakeDonutCounter.WithLabelValues(in.Name).Inc()
 	if err != nil {
-
 		return nil, err
 	}
-	ds.lg.Println(in)
+	defer ds.lg.Printf("%s|handle get make donut for %v", time.Now().String(), in)
 	return &pb.DonutRequest{Name: in.GetName()}, nil
 }
 
@@ -97,7 +101,7 @@ func main() {
 	)
 	httpServer := &http.Server{Handler: promhttp.HandlerFor(reg, promhttp.HandlerOpts{}), Addr: fmt.Sprintf("0.0.0.0:%d", 9092)}
 	reflection.Register(server)
-	pb.RegisterDonutShopServer(server, &DonutServer{lg: lg})
+	pb.RegisterDonutShopServer(server, &DonutServer{lg: lg, db: conn})
 	rpcMetrics.InitializeMetrics(server)
 	lg.Printf("shop opened on %v", lis.Addr())
 
