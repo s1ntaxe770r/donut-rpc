@@ -5,6 +5,7 @@ service DonutShop {
     rpc GetDonut(DonutRequest) returns (Donut){}
     rpc GetDonuts(google.protobuf.Empty) returns (Donuts){}
     rpc MakeDonut(Donut) returns (DonutRequest){}
+    rpc DeleteDonut(DonutRequest) returns (DeleteResponse){} 
     rpc GetVersion(google.protobuf.Empty) returns (Version){}
 }
 
@@ -25,4 +26,6 @@ message Donuts {
 message Version {
     string number =1;
 }
-
+message DeleteResponse {
+  string status =1;
+}
